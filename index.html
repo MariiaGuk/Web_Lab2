@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS PRACTISE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="figures" width="500" height="500"></canvas>
+    <button id="change">Change Figure</button>
+
+    <script>
+        const canvas = document.getElementById("figures");
+        const ctx = canvas.getContext("2d");
+        const button = document.getElementById("change");
+
+        let figure = 1;
+
+        function drawFigure(n) {
+            if (n === 1) drawCircle(ctx, canvas, 250);
+            else if (n === 2) drawSquare(ctx, canvas, 500);
+            else if (n === 3) triangle(ctx, canvas, 500);
+        }
+
+        function changefigure() {
+            button.disabled = true;
+
+            // 1. Фігура зменшується і зникає
+            canvas.classList.add("out");
+
+            canvas.addEventListener("animationend", () => {
+                // 2. Малюємо нову фігуру, поки canvas невидимий
+                figure++;
+                if (figure > 3) figure = 1;
+                drawFigure(figure);
+
+                // 3. Нова фігура з'являється
+                canvas.classList.remove("out");
+                canvas.classList.add("in");
+
+                canvas.addEventListener("animationend", () => {
+                    canvas.classList.remove("in");
+                    button.disabled = false;
+                }, { once: true });
+            }, { once: true });
+        }
+
+        button.addEventListener("click", changefigure);
+
+        function drawCircle(ctx, c, radius) {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.beginPath();
+            ctx.arc(radius, radius, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = "#b8a072";
+            ctx.fill();
+        }
+
+        function drawSquare(ctx, c, side) {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.beginPath();
+            ctx.rect(0, 0, side, side);
+            ctx.fillStyle = "#b87272";
+            ctx.fill();
+        }
+
+        function triangle(ctx, c, side) {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.beginPath();
+            ctx.moveTo(side / 2, 0);
+            ctx.lineTo(0, side);
+            ctx.lineTo(side, side);
+            ctx.closePath();
+            ctx.fillStyle = "#7281b8";
+            ctx.fill();
+        }
+
+        // Початкова фігура (коло)
+        drawFigure(figure);
+    </script>
+</body>
+</html>
