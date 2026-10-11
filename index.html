@@ -9,6 +9,10 @@
 <body>
     <canvas id="figures" width="500" height="500"></canvas>
     <button id="change">Change Figure</button>
+    <div id="coords"></div>
+    <a class="arrow left" href="exercise4.html" aria-label="<">&#8592;</a>
+    <a class="arrow right" href="exercise2.html" aria-label=">">&#8594;</a>
+
 
     <script>
         const canvas = document.getElementById("figures");
@@ -26,16 +30,13 @@
         function changefigure() {
             button.disabled = true;
 
-            // 1. Фігура зменшується і зникає
             canvas.classList.add("out");
 
             canvas.addEventListener("animationend", () => {
-                // 2. Малюємо нову фігуру, поки canvas невидимий
                 figure++;
                 if (figure > 3) figure = 1;
                 drawFigure(figure);
 
-                // 3. Нова фігура з'являється
                 canvas.classList.remove("out");
                 canvas.classList.add("in");
 
@@ -77,6 +78,36 @@
 
         // Початкова фігура (коло)
         drawFigure(figure);
+
+
+
+        const coords = document.getElementById("coords");
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (button.disabled) {
+                coords.style.display = "none";
+                return;
+            }
+
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.floor((e.clientX - rect.left) * canvas.width / rect.width);
+            const y = Math.floor((e.clientY - rect.top) * canvas.height / rect.height);
+
+            const alpha = ctx.getImageData(x, y, 1, 1).data[3];
+            if (alpha === 0) {
+                coords.style.display = "none";
+                return;
+            }
+
+            coords.textContent = `x: ${x}, y: ${y}`;
+            coords.style.display = "block";
+            coords.style.left = e.clientX + 15 + "px";
+            coords.style.top = e.clientY + 15 + "px";
+        });
+
+        canvas.addEventListener("mouseleave", () => {
+            coords.style.display = "none";
+        });
     </script>
 </body>
 </html>
