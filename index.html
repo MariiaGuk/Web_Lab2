@@ -2,16 +2,16 @@
 <html lang="en-US">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS PRACTISE</title>
+    <title>Figures</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1 id="title"></h1>
     <canvas id="figures" width="500" height="500"></canvas>
     <button id="change">Change Figure</button>
     <div id="coords"></div>
-    <a class="arrow left" href="exercise4.html" aria-label="<">&#8592;</a>
-    <a class="arrow right" href="exercise2.html" aria-label=">">&#8594;</a>
+    <a class="arrow left" href="exercise4.html">&#8592;</a>
+    <a class="arrow right" href="exercise2.html">&#8594;</a>
 
 
     <script>
@@ -96,17 +96,20 @@
             const alpha = ctx.getImageData(x, y, 1, 1).data[3];
             if (alpha === 0) {
                 coords.style.display = "none";
+                title.textContent = ``;
                 return;
             }
 
-            coords.textContent = `x: ${x}, y: ${y}`;
+            coords.textContent = `x: ${x}; y: ${y}`;
             coords.style.display = "block";
             coords.style.left = e.clientX + 15 + "px";
             coords.style.top = e.clientY + 15 + "px";
+            title.textContent = `x: ${x}; y: ${y}`;
         });
 
         canvas.addEventListener("mouseleave", () => {
             coords.style.display = "none";
+            title.textContent = ``;
         });
     </script>
 </body>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Lists</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page">
+        <div class="sort-bar">
+            <button data-sort="original" class="active">Original</button>
+            <button data-sort="asc">А → Я</button>
+            <button data-sort="desc">Я → А</button>
+        </div>
+        
+        <div class="container">
+            <ul class="list" id="left">
+                <li data-index="0"><input type="checkbox"> Андрієнко А.Б.</li>
+                <li data-index="1"><input type="checkbox"> Дмитренко М.Н.</li>
+                <li data-index="2"><input type="checkbox"> Василенко Д.Е.</li>
+                <li data-index="3"><input type="checkbox"> Борисенко В.Г.</li>
+                <li data-index="4"><input type="checkbox"> Гавриленко К.Л.</li>
+                <li data-index="5"><input type="checkbox"> Клименко В.М.</li>
+            </ul>
+
+            <div class="buttons">
+                <button id="toRight">&gt;&gt;</button>
+                <button id="toLeft">&lt;&lt;</button>
+            </div>
+
+            <ul class="list" id="right"></ul>
+        </div>
+    </div>
+    <a class="arrow left" href="index.html">&#8592;</a>
+    <a class="arrow right" href="exercise3.html">&#8594;</a>
+
+
+    <script>
+        const left = document.getElementById("left");
+        const right = document.getElementById("right");
+
+        // Collator for ukrainian alphabet
+        const collator = new Intl.Collator("uk");
+        const text = (el) => el.textContent.trim();
+
+        const sorters = {
+            original: (a, b) => a.dataset.index - b.dataset.index,
+            asc: (a, b) => collator.compare(text(a), text(b)),
+            desc: (a, b) => collator.compare(text(b), text(a)),
+        };
+
+        let compare = sorters.original; // current sorting function
+
+        function sortList(list) {
+            [...list.children]
+                .sort(compare)
+                .forEach((el) => list.appendChild(el));
+        }
+
+        function insertInOrder(list, item) {
+            const next = [...list.children].find((el) => compare(el, item) > 0);
+            list.insertBefore(item, next || null); // null = add at the end
+        }
+
+        function move(from, to) {
+            const checked = from.querySelectorAll("input:checked");
+            checked.forEach((checkbox) => {
+                checkbox.checked = false;
+                insertInOrder(to, checkbox.closest("li"));
+            });
+        }
+
+        // move buttons
+        document.getElementById("toRight").addEventListener("click", () => move(left, right));
+        document.getElementById("toLeft").addEventListener("click", () => move(right, left));
+
+        // sorting buttons
+        document.querySelectorAll(".sort-bar button").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                compare = sorters[btn.dataset.sort];
+                sortList(left);
+                sortList(right);
+
+                document.querySelectorAll(".sort-bar button").forEach((b) => b.classList.toggle("active", b === btn));
+            });
+        });
+    </script>
+</body>
+</html>
