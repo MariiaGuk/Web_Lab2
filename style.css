@@ -132,6 +132,7 @@ canvas:hover {
 .container {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 20px;
     width: 800px;
     max-width: 95%;
@@ -186,4 +187,54 @@ canvas:hover {
 .sort-bar button.active {
     background: #626dd4;
     color: #fff;
+}
+
+
+
+/* Exercise3 */
+textarea {
+    box-sizing: content-box;   /* height = висота самого тексту, без відступів і рамки */
+    flex-shrink: 0;
+    align-self: flex-start;    /* верх textarea на одному рівні з верхом квадратиків */
+    width: 165px;
+    height: 500px;
+    min-height: 50px;          /* 1 рядок */
+    max-height: 500px;         /* 10 рядків */
+    padding: 0 8px;            /* вертикальних відступів немає */
+    line-height: 50px;         /* висота рядка = висота квадратика */
+    white-space: pre;          /* без перенесення довгих рядків */
+    overflow: hidden;
+    background: #f1f3f9;
+    border: 2px solid #dfe3ee; /* така сама товщина, як у рамки #squares */
+    border-radius: 12px;
+    font: 24px/50px monospace;
+    resize: vertical;
+}
+
+#squares {
+    flex-shrink: 0;
+    align-self: flex-start;
+    border: 2px solid #4e5f86;
+}
+
+#squares:empty {
+    border: none;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+}
+
+.black {
+    background: #7788af;
+}
+
+.white {
+    background: #fff;
 }

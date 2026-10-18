@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Squares</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page">
+        <div class="container">
+            <textarea id="input">
+            00000000000
+            00110001100
+            01001010010
+            01000100010
+            01000000010
+            00100000100
+            00010001000
+            00001010000
+            00000100000
+            00000000000
+            </textarea>
+            <div id="squares"></div>
+        </div>
+    </div>
+    <a class="arrow left" href="exercise2.html">&#8592;</a>
+    <a class="arrow right" href="exercise4.html">&#8594;</a>
+    <script>
+        const MAX_COLS = 11;  // максимум квадратиків у рядку
+        const CELL = 50;      // розмір квадратика в px
+
+        // Скільки рядків вміщується у висоту textarea
+        function maxRows() {
+            return Math.max(1, Math.floor(input.clientHeight / CELL));
+        }
+
+        function draw() {
+            const clean = input.value
+                .replace(/[^01\n]/g, "")
+                .split("\n")
+                .slice(0, maxRows())
+                .map((line) => line.slice(0, MAX_COLS))
+                .join("\n");
+
+            if (clean !== input.value) input.value = clean;
+
+            squares.innerHTML = "";
+
+            if (clean === "") return; // textarea зовсім порожній: нічого не малюємо
+
+            clean.split("\n").forEach((line) => {
+                const row = document.createElement("div");
+                row.className = "row";
+
+                // Порожній рядок = повністю білий ряд
+                const cells = line === "" ? "0".repeat(MAX_COLS) : line;
+
+                for (const ch of cells) {
+                    const cell = document.createElement("div");
+                    cell.className = ch === "1" ? "cell black" : "cell white";
+                    cell.style.width = CELL + "px";
+                    cell.style.height = CELL + "px";
+                    row.appendChild(cell);
+                }
+
+                squares.appendChild(row);
+            });
+        }
+
+        input.addEventListener("input", draw);
+
+        // Перераховуємо, коли користувач змінює висоту textarea
+        new ResizeObserver(() => {
+            // Округлюємо висоту до кратної розміру квадратика
+            const rows = Math.max(1, Math.round(input.clientHeight / CELL));
+            const snapped = rows * CELL;
+
+            if (input.clientHeight !== snapped) {
+                input.style.height = snapped + "px";
+            }
+
+            draw();
+        }).observe(input);
+    </script>
+</body>
